@@ -1,6 +1,7 @@
 (function(document){
 
-	var volume = 0.4;
+	var volume = 1;
+	var running = true;
 
 	function Snd(file){
 
@@ -25,7 +26,8 @@
 
 		var sounds = [];
 		var options = options || {
-			polyphonic : true
+			polyphonic : true,
+			volume : 1
 		};
 
 		for(var i = 0; i < files.length; i++) {
@@ -60,16 +62,6 @@
 
 	}
 
-	function meeeeeeat() {
-		var a = new snd('m'+Math.ceil(Math.random() * 2));
-		a.play();
-		setTimeout(meeeeeeat,Math.random() * 2000);
-	}
-
-	// setTimeout(meeeeeeat,500);
-
-
-
 	function drumMachine() {
 
 		// btw ffmpeg -i beep.wav -codec:a libmp3lame -qscale:a 2 beep.mp3
@@ -87,37 +79,51 @@
 			vocals : new Sampler([
 				'vocals/m1',
 				'vocals/m2'
-			], {
-				polyphonic : false
-			})
+			], {polyphonic : false}),
+			cello : new Sampler([
+				'cello/1',
+				'cello/2',
+				'cello/3',
+				'cello/4',
+				'cello/5',
+				'cello/6',
+				'cello/7'
+			], {polyphonic : false})
 		};
 
 		var patterns = {
 			drums : [
-				'0--01--1-1001---',
-				'0---1--2-1-01--1',
-				'011-1-1--1-01---',
-				'0-0-111--1-01111',
-				'020-12-2-120--22'
+				'----------------',
+				'0---1-----0-1---',
+				'0---11----0-1---',
+				'00--1-----0-11--'
 			],
 			perc : [
-				'-0--0-0--01-0100',
-				'10--000-101-0100',
-				'1010101010101010'
+				'----------------',
+				// '000-00000000-000',
+				'11111111111111--'
 			],
 			vocals : [
-				'--------000--00-',
-				'------------1111'
+				'--------------0-',
+				'-----------1----'
+			],
+			cello : [
+				'0---------------',
+				'0123456765432-1-',
+				'7654321012345-67'
 			]
 		};
 
 		var options = {
 			bpm : 120,
-			tick : 800 / 4,
+			tick : (Math.random() * 800 + 300) / 4,
 			step : 0
 		}
 
 		function tick() {
+
+			if (!running)
+				return;
 
 			for (i in patterns) {
 
@@ -142,5 +148,9 @@
 	}
 
 	drumMachine();
+
+	document.getElementsByTagName('body')[0].addEventListener('click',function(){
+		running = !running;
+	})
 
 })(document);
