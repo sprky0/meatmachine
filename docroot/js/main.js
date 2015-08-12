@@ -1,13 +1,15 @@
 (function(document){
 
 	var volume = 1;
-	var running = true;
+	var running = false;
+	var preload = [];
 
-	function Snd(file){
+	function Snd(file) {
 
 		var a = document.createElement('audio');
 		var ext = !!a.canPlayType('audio/mp3') ? '.mp3' : '.wav';
 		a.src = 'audio/' + file + ext;
+		a.load();
 		a.volume = volume;
 
 		this.play = function() {
@@ -79,12 +81,12 @@
 			vocals : new Sampler([
 				'vocals/givemethat',
 				'vocals/guh',
-				'vocals/meat',
+				'vocals/meat1',
 				'vocals/meat2',
 				'vocals/yell1',
 				'vocals/yell2'
 			], {polyphonic : false}),
-			cello : new Sampler([
+			bass : new Sampler([
 				'cello/1',
 				'cello/2',
 				'cello/3',
@@ -120,10 +122,10 @@
 				'22222-------222-',
 				'33333-------333-'
 			],
-			cello : [
+			bass : [
 				'0--4---2----5---',
-				'0--4---1----5---',
-				'2--5---3----6---'
+				'0--4---2----5432',
+				'0-3456-41---5-21'
 			]
 		};
 
@@ -160,10 +162,28 @@
 
 	}
 
+	var noise = new Snd('noise/noise', {autoplay:true,loop:true});
+
 	drumMachine();
 
 	document.getElementsByTagName('body')[0].addEventListener('click',function(){
+
 		running = !running;
+
+		var meat = document.getElementsByClassName('meat')[0];
+
+		if (!running) {
+			document.getElementById('main').classList.add('waiting');
+			meat.classList.add('desaturate');
+			meat.classList.remove('dancing');
+			noise.play();
+		} else {
+			document.getElementById('main').classList.remove('waiting');
+			meat.classList.remove('desaturate');
+			meat.classList.add('dancing');
+			noise.stop();
+		}
+
 	})
 
 })(document);
